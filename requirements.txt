@@ -1,1 +1,3 @@
-
+!pip install streamlit==1.23.0 --quiet
+!pip install -U easynmt --quiet
+import streamlit as st
