@@ -131,7 +131,7 @@ with st.form(key="input_form"):
 
 if st.session_state.submit_btn:
     st.text("検索結果を下記にお示しします。")
-    from scrape import scrape_search_num
+   # from scrape import scrape_search_num
     with st.form(key="middle_form"):
       st.markdown("<strong>:red[{0}]</strong>".format(scrape_search_num(st.session_state.search_word))+'件該当しました。このまま進めてよろしいでしょうか？', unsafe_allow_html=True)
       st.caption("検索に時間がかかるため検索結果が50件程度で実行されることをおすすめします。")
@@ -140,7 +140,7 @@ if st.session_state.submit_btn:
 
 if st.session_state.search_btn:
   st.text("それでは引き続きデータの集約と翻訳を進めて参ります。")
-  from scrape import scrape_data
+  #from scrape import scrape_data
   df = scrape_data(st.session_state.search_word)
   df['Published_year'] = df['Published'].str[0:4]
   df = df.sort_values('Published_year')
