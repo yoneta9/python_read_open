@@ -1,2 +1,8 @@
 streamlit==1.23.0
 easynmt==2.0.2
+pandas
+numpy
+matplotlib
+seaborn
+datetime
+base64
