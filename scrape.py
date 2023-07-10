@@ -2,11 +2,6 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email.mime.text import MIMEText
-from email import encoders
 import datetime
 import math
 from time import sleep
