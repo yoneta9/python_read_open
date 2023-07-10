@@ -1,6 +1,6 @@
 #必要なライブラリを読み込んでいく
 import requests
-from beautifulsoup4 import BeautifulSoup
+from bs4 import BeautifulSoup
 import pandas as pd
 import datetime
 import math
