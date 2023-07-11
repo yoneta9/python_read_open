@@ -8,7 +8,7 @@ import pybase64
 import requests
 from bs4 import BeautifulSoup
 import math
-from time import sleep    
+from time import sleep
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -41,105 +41,21 @@ with st.form(key="input_form"):
       st.session_state.submit_btn = True
     st.caption("point1: 検索ワードは「(検索ワード1) AND (検索ワード2)」のような形で記載してください。")
     st.caption("point2: pubmed内の'AdvancedSearchBuilder'で作成すると簡単です。")
-    
-#翻訳用のライブラリを読み込んでいく
-from easynmt import EasyNMT
-model = EasyNMT('Helsinki-NLP/opus-mt-zh-en')
 
-def scrape_search_num(search_word):
-  if search_word:
-    base_url = "https://pubmed.ncbi.nlm.nih.gov"
-    search_url = base_url + "/?term=" + search_word
-
-    response = requests.get(search_url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-
-    value_span = soup.find('span', class_='value')
-    return int(value_span.get_text())
-  else:
-    pass
-      
 if st.session_state.submit_btn:
     st.text("検索結果を下記にお示しします。")
-   # from scrape import scrape_search_num
+    from scrape import scrape_search_num
     with st.form(key="middle_form"):
       st.markdown("<strong>:red[{0}]</strong>".format(scrape_search_num(st.session_state.search_word))+'件該当しました。このまま進めてよろしいでしょうか？', unsafe_allow_html=True)
       st.caption("検索に時間がかかるため検索結果が50件程度で実行されることをおすすめします。")
       if st.form_submit_button("実行する"):
         st.session_state.search_btn = True
 
-def scrape_data(search_word):
-  base_url = "https://pubmed.ncbi.nlm.nih.gov"
-  search_url = base_url + "/?term=" + search_word
-  articles = []
-
-
-  response = requests.get(search_url)
-  soup = BeautifulSoup(response.text, 'html.parser')
-
-  value_span = soup.find('span', class_='value')
-  value_span_num_int = int(value_span.get_text())
-  value_span_nums = math.ceil(value_span_num_int/10)
-  print('{0}件ヒットした'.format(value_span_num_int))
-  for value_span_num in range(1,value_span_nums+1):
-    search_url2 = search_url + '&page=' +str(value_span_num)
-    # search_url2 = search_url + '&page=1'
-    print('{0}ページ目をスクレイピング中'.format(value_span_num))
-    response = requests.get(search_url2)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    sleep(2)
-    # soup3 =BeautifulSoup(driver.page_source,"html.parser")
-    content = soup.find("div", class_="search-results-chunk results-chunk")
-    for article in content.find_all('a', class_='docsum-title'):
-        article_url = base_url + article.get('href')
-        article_response = requests.get(article_url)
-        article_soup = BeautifulSoup(article_response.text, 'html.parser')
-        article_soup2 = article_soup.find("main", class_="article-details")
-        sleep(2)
-        try:
-            title = article_soup2.find('h1', class_='heading-title').get_text(strip=True)
-        except AttributeError:
-            title = ""
-
-        try:
-            author = article_soup2.find('div', class_='authors-list').get_text(strip=True)
-        except AttributeError:
-            author = ""
-
-        try:
-            abstract = article_soup2.find('div', class_='abstract-content selected').get_text(strip=True)
-        except AttributeError:
-            abstract = ""
-
-        try:
-            publishid = article_soup2.find('span', class_="cit").get_text(strip=True)
-        except AttributeError:
-            publishid = ""
-
-        try:
-            pmid = article_soup2.find('strong', class_="current-id").get_text(strip=True)
-        except AttributeError:
-            pmid = ""
-
-        articles.append([title, author, abstract,publishid,pmid,article_url])
-  df = pd.DataFrame(articles, columns=['title', 'author', 'abstract','Published','PMID','URL'])
-
-  #翻訳していく
-  def translate_text(x):
-    if x ==np.nan:
-      return x
-    else:
-      x = model.translate(x, target_lang='ja')
-      
-      return x
-  df['タイトル'] = df['title'].apply(translate_text)
-  df['要約'] = df['abstract'].apply(translate_text)
-  return df
-
 if st.session_state.search_btn:
   st.text("それでは引き続きデータの集約と翻訳を進めて参ります。")
-  #from scrape import scrape_data
+  from scrape import scrape_data
   df = scrape_data(st.session_state.search_word)
+  st.caption("抽出完了。翻訳中・・・")
   df['Published_year'] = df['Published'].str[0:4]
   df = df.sort_values('Published_year')
   fig, ax = plt.subplots(figsize=(8,4))
