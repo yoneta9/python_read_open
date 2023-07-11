@@ -44,4 +44,4 @@ with st.form(key="input_form"):
     
 #翻訳用のライブラリを読み込んでいく
 from easynmt import EasyNMT
-#model = EasyNMT('mbart50_m2m')
+model = EasyNMT('mbart50_en2m')
