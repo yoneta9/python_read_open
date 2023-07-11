@@ -44,7 +44,7 @@ with st.form(key="input_form"):
     
 #翻訳用のライブラリを読み込んでいく
 from easynmt import EasyNMT
-model = EasyNMT('opus-mt')
+model = EasyNMT('opus-mt-zh-en')
 
 def scrape_search_num(search_word):
   if search_word:
