@@ -57,7 +57,6 @@ if st.session_state.search_btn:
   st.text("それでは引き続きデータの集約と翻訳を進めて参ります。")
   from scrape import scrape_data
   df = scrape_data(st.session_state.search_word)
-  st.caption("抽出完了。翻訳中・・・")
   df['Published_year'] = df['Published'].str[0:4]
   df = df.sort_values('Published_year')
   fig, ax = plt.subplots(figsize=(8,4))
