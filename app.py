@@ -45,3 +45,25 @@ with st.form(key="input_form"):
 #翻訳用のライブラリを読み込んでいく
 from easynmt import EasyNMT
 model = EasyNMT('opus-mt')
+
+def scrape_search_num(search_word):
+  if search_word:
+    base_url = "https://pubmed.ncbi.nlm.nih.gov"
+    search_url = base_url + "/?term=" + search_word
+
+    response = requests.get(search_url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    value_span = soup.find('span', class_='value')
+    return int(value_span.get_text())
+  else:
+    pass
+      
+if st.session_state.submit_btn:
+    st.text("検索結果を下記にお示しします。")
+   # from scrape import scrape_search_num
+    with st.form(key="middle_form"):
+      st.markdown("<strong>:red[{0}]</strong>".format(scrape_search_num(st.session_state.search_word))+'件該当しました。このまま進めてよろしいでしょうか？', unsafe_allow_html=True)
+      st.caption("検索に時間がかかるため検索結果が50件程度で実行されることをおすすめします。")
+      if st.form_submit_button("実行する"):
+        st.session_state.search_btn = True
