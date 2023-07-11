@@ -41,7 +41,7 @@ with st.form(key="input_form"):
       st.session_state.submit_btn = True
     st.caption("point1: 検索ワードは「(検索ワード1) AND (検索ワード2)」のような形で記載してください。")
     st.caption("point2: pubmed内の'AdvancedSearchBuilder'で作成すると簡単です。")
-    st.caption("point3: 検索結果が0の場合、エラーが発生した場合、検索ワードを変更したい場合は、¥n　　　　　　　　　　　　　　　　　　　　　　　　更新ボタンか「F5」ボタンを押してください。")
+    st.caption("point3: 検索結果が0の場合、エラーが発生した場合、検索ワードを変更したい場合は、　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　更新ボタンか「F5」ボタンを押してください。")
 
 
 if st.session_state.submit_btn:
